@@ -1,3 +1,4 @@
-./ATMega128RailwayControl/Debug
-./ATMega128RailwayControl/Release
+ATMega128RailwayControl/Debug
+ATMega128RailwayControl/Release
+.vs
 
