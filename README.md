@@ -1,4 +1,4 @@
-# railway-control
+# ATMega128 Railway Control
 
 Made for automatic controlling of 6 railways of `miniature railway installation`.
 
