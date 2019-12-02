@@ -1,9 +1,9 @@
 ﻿/*
- * timer.h
- *
- * Created: 02.12.2019 18:29:21
- *  Author: Ilya Pikin
- */ 
+* timer.h
+*
+* Created: 02.12.2019 18:29:21
+*  Author: Ilya Pikin
+*/
 
 #ifndef TIMER_H_
 #define TIMER_H_

@@ -1,10 +1,9 @@
 ﻿/*
- * pwm.h
- *
- * Created: 25.11.2019 21:05:46
- *  Author: Ilya Pikin
- */ 
-
+* pwm.h
+*
+* Created: 25.11.2019 21:05:46
+*  Author: Ilya Pikin
+*/
 
 #ifndef PWM_H_
 #define PWM_H_

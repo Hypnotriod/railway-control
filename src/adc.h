@@ -1,9 +1,9 @@
 ﻿/*
- * adc.h
- *
- * Created: 25.11.2019 21:13:48
- *  Author: Ilya Pikin
- */ 
+* adc.h
+*
+* Created: 25.11.2019 21:13:48
+*  Author: Ilya Pikin
+*/
 
 
 #ifndef ADC_H_

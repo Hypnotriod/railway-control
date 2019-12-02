@@ -1,10 +1,9 @@
 ﻿/*
- * motors.h
- *
- * Created: 25.11.2019 22:30:24
- *  Author: Ilya Pikin
- */ 
-
+* motors.h
+*
+* Created: 25.11.2019 22:30:24
+*  Author: Ilya Pikin
+*/
 
 #ifndef MOTORS_H_
 #define MOTORS_H_
@@ -32,8 +31,8 @@
 
 enum Motors_Direction
 {
-	MOTORS_DIRECTION_FORWARD,
-	MOTORS_DIRECTION_BACKWARD
+    MOTORS_DIRECTION_FORWARD,
+    MOTORS_DIRECTION_BACKWARD
 };
 
 void Motors_Init(void);

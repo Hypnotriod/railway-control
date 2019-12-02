@@ -1,9 +1,9 @@
 ﻿/*
- * ui.h
- *
- * Created: 25.11.2019 21:04:45
- *  Author: Ilya Pikin
- */ 
+* ui.h
+*
+* Created: 25.11.2019 21:04:45
+*  Author: Ilya Pikin
+*/
 
 
 #ifndef UI_H_
@@ -21,9 +21,9 @@
 
 enum UI_KnobDirectionEnum
 {
-	UI_KNOB_DIR_BOUTH_WAYS,
-	UI_KNOB_DIR_UP,
-	UI_KNOB_DIR_DOWN	
+    UI_KNOB_DIR_BOUTH_WAYS,
+    UI_KNOB_DIR_UP,
+    UI_KNOB_DIR_DOWN
 };
 
 #define UI_IsManualControlModeOn()	((UI_MANUAL_CONTROL_MODE_PIN & (1 << UI_MANUAL_CONTROL_MODE_INDEX)) == 0)

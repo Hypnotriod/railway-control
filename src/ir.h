@@ -1,9 +1,9 @@
 ﻿/*
- * ir.h
- *
- * Created: 02.12.2019 12:48:25
- *  Author: Ilya Pikin
- */ 
+* ir.h
+*
+* Created: 02.12.2019 12:48:25
+*  Author: Ilya Pikin
+*/
 
 
 #ifndef IR_H_

@@ -1,9 +1,9 @@
 ﻿/*
- * fcpu.h
- *
- * Created: 02.12.2019 18:57:57
- *  Author: Ilya Pikin
- */ 
+* fcpu.h
+*
+* Created: 02.12.2019 18:57:57
+*  Author: Ilya Pikin
+*/
 
 
 #ifndef FCPU_H_
