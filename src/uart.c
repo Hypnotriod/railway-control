@@ -8,14 +8,14 @@
 #include "uart.h"
 #include "fcpu.h"
 
-volatile char   UART0_RX_Buffer[UART0_RX_BUFFER_LENGTH] = {0};
-volatile int8_t UART0_RX_Buffer_ReadIndex = 0;
-volatile int8_t UART0_RX_Buffer_WriteIndex = 0;
+volatile char   uart0RXBuffer[UART0_RX_BUFFER_LENGTH] = {0};
+volatile int8_t uart0RXBufferReadIndex = 0;
+volatile int8_t uart0RXBufferWriteIndex = 0;
 
-volatile char   UART0_TX_Buffer[UART0_TX_BUFFER_LENGTH] = {0};
-volatile int8_t UART0_TX_Buffer_ReadIndex = 0;
-volatile int8_t UART0_TX_Buffer_WriteIndex = 0;
-volatile bool   UART0_TX_InProgress = false;
+volatile char   uart0TXBuffer[UART0_TX_BUFFER_LENGTH] = {0};
+volatile int8_t uart0TXBufferReadIndex = 0;
+volatile int8_t uart0TXBufferWriteIndex = 0;
+volatile bool   uart0TXInProgress = false;
 
 void UART0_Init(uint32_t baud)
 {
@@ -35,47 +35,47 @@ void UART0_WriteString(const char* data)
 {
     while(*data)
     {
-        UART0_TX_Buffer[UART0_TX_Buffer_WriteIndex] = *data++;
-        UART0_TX_Buffer_WriteIndex = (UART0_TX_Buffer_WriteIndex + 1) % UART0_TX_BUFFER_LENGTH;
+        uart0TXBuffer[uart0TXBufferWriteIndex] = *data++;
+        uart0TXBufferWriteIndex = (uart0TXBufferWriteIndex + 1) % UART0_TX_BUFFER_LENGTH;
     }
     
-    if(UART0_TX_InProgress == false)
+    if(uart0TXInProgress == false)
     {
-        UART0_TX_InProgress = true;
-        UDR0 = UART0_TX_Buffer[UART0_TX_Buffer_ReadIndex];
-        UART0_TX_Buffer_ReadIndex = (UART0_TX_Buffer_ReadIndex + 1) % UART0_TX_BUFFER_LENGTH;
+        uart0TXInProgress = true;
+        UDR0 = uart0TXBuffer[uart0TXBufferReadIndex];
+        uart0TXBufferReadIndex = (uart0TXBufferReadIndex + 1) % UART0_TX_BUFFER_LENGTH;
     }
 }
 
 char UART0_ReadChar(void)
 {
-    char tmp = UART0_RX_Buffer[UART0_RX_Buffer_ReadIndex];
-    if(UART0_RX_Buffer_ReadIndex != UART0_RX_Buffer_WriteIndex) {
-        UART0_RX_Buffer_ReadIndex = (UART0_RX_Buffer_ReadIndex + 1) % UART0_RX_BUFFER_LENGTH;
+    char tmp = uart0RXBuffer[uart0RXBufferReadIndex];
+    if(uart0RXBufferReadIndex != uart0RXBufferWriteIndex) {
+        uart0RXBufferReadIndex = (uart0RXBufferReadIndex + 1) % UART0_RX_BUFFER_LENGTH;
     }
     return tmp;
 }
 
 bool UART0_Available(void)
 {
-    return (UART0_RX_Buffer_ReadIndex != UART0_RX_Buffer_WriteIndex);
+    return (uart0RXBufferReadIndex != uart0RXBufferWriteIndex);
 }
 
 ISR(USART0_RX_vect)
 {
-    UART0_RX_Buffer[UART0_RX_Buffer_WriteIndex] = UDR0;
-    UART0_RX_Buffer_WriteIndex = (UART0_RX_Buffer_WriteIndex + 1) % UART0_RX_BUFFER_LENGTH;
+    uart0RXBuffer[uart0RXBufferWriteIndex] = UDR0;
+    uart0RXBufferWriteIndex = (uart0RXBufferWriteIndex + 1) % UART0_RX_BUFFER_LENGTH;
 }
 
 ISR(USART0_TX_vect)
 {
-    if(UART0_TX_Buffer_ReadIndex != UART0_TX_Buffer_WriteIndex)
+    if(uart0TXBufferReadIndex != uart0TXBufferWriteIndex)
     {
-        UDR0 = UART0_TX_Buffer[UART0_TX_Buffer_ReadIndex];
-        UART0_TX_Buffer_ReadIndex = (UART0_TX_Buffer_ReadIndex + 1) % UART0_TX_BUFFER_LENGTH;
+        UDR0 = uart0TXBuffer[uart0TXBufferReadIndex];
+        uart0TXBufferReadIndex = (uart0TXBufferReadIndex + 1) % UART0_TX_BUFFER_LENGTH;
     }
     else
     {
-        UART0_TX_InProgress = false;
+        uart0TXInProgress = false;
     }
 }
