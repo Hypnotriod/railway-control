@@ -41,6 +41,7 @@ void UI_Update(void)
     {
         if (manualControlIsOn == true) {
             manualControlIsOn = false;
+            Automation_Reset();
         }
         Automation_Update();
     }

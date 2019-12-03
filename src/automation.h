@@ -11,8 +11,9 @@
 #include <stdbool.h>
 #include "motors.h"
 
-#define AUTOMATION_TIMER_INTERRUPT_MICROSECONDS     10000
-#define AUTOMATION_SPEED_INCREMENTATION_STEP        0.05f;
+#define AUTOMATION_TIMER_INTERRUPT_MICROSECONDS     10000UL
+#define AUTOMATION_MOTOR_SPEED_INCREMENTATION_STEP  0.01f;
+#define AUTOMATION_MOTOR_START_SPEED                0.4f;
 #define AUTOMATION_RAILWAYS_NUM                     MOTORS_NUM
 #define AUTOMATION_SENSORS_NUM                      IR_NUM
 
@@ -34,5 +35,6 @@ struct Automation_RailwayConfigStruct
 
 void Automation_Init(void);
 void Automation_Update(void);
+void Automation_Reset(void);
 
 #endif /* AUTOMATION_H_ */

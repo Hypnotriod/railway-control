@@ -23,13 +23,19 @@ void updateIRSensorsState(void);
 
 void Automation_Init(void)
 {
+    Automation_Reset();
+    TIMER0_Init(AUTOMATION_TIMER_INTERRUPT_MICROSECONDS, timer0Callback);
+}
+
+void Automation_Reset(void)
+{
     uint8_t i;
     
     for (i = 0; i < AUTOMATION_RAILWAYS_NUM; i++)
     {
         raiwals[i].direction = MOTORS_DIRECTION_FORWARD;
         raiwals[i].speed = 1.0f; //todo: Get Top speed per railway
-        raiwals[i].speedCurrent = 0;
+        raiwals[i].speedCurrent = AUTOMATION_MOTOR_START_SPEED;
         raiwals[i].timeoutSeconds = 0;
     }
     
@@ -40,8 +46,6 @@ void Automation_Init(void)
         sensors[i].railwayIndex = 5; //todo: Get mapped railway index
         sensors[i].timeoutSeconds = 5; //todo: Get mapped timeout
     }
-    
-    TIMER0_Init(AUTOMATION_TIMER_INTERRUPT_MICROSECONDS, timer0Callback);
 }
 
 void Automation_Update(void)
@@ -90,22 +94,20 @@ void updateMotorsState(void)
     {
         if (raiwals[i].speedCurrent < raiwals[i].speed)
         {
-            raiwals[i].speedCurrent -= AUTOMATION_SPEED_INCREMENTATION_STEP;
-            if (raiwals[i].speedCurrent < raiwals[i].speed) {
+            raiwals[i].speedCurrent += AUTOMATION_MOTOR_SPEED_INCREMENTATION_STEP;
+            if (raiwals[i].speedCurrent > raiwals[i].speed) {
                 raiwals[i].speedCurrent = raiwals[i].speed;
-            }   
-            Motors_SetSpeed(i, raiwals[i].speedCurrent);
-            Motors_SetDirection(i, raiwals[i].direction);             
+            }         
         }
         else if (raiwals[i].speedCurrent > raiwals[i].speed)
         {
-            raiwals[i].speedCurrent += AUTOMATION_SPEED_INCREMENTATION_STEP;
-            if (raiwals[i].speedCurrent > raiwals[i].speed) {
+            raiwals[i].speedCurrent -= AUTOMATION_MOTOR_SPEED_INCREMENTATION_STEP;
+            if (raiwals[i].speedCurrent < raiwals[i].speed) {
                 raiwals[i].speedCurrent = raiwals[i].speed;
-            }  
-            Motors_SetSpeed(i, raiwals[i].speedCurrent);
-            Motors_SetDirection(i, raiwals[i].direction);              
+            }           
         }
+        Motors_SetSpeed(i, raiwals[i].speedCurrent);
+        Motors_SetDirection(i, raiwals[i].direction);
     }
 }
 
@@ -119,6 +121,7 @@ void updateOnSecondPassed(void)
             raiwals[i].timeoutSeconds--;
             if (raiwals[i].timeoutSeconds == 0) {
                 raiwals[i].speed = 1.0f; //todo: Get Top speed per railway
+                raiwals[i].speedCurrent = AUTOMATION_MOTOR_START_SPEED;
             }
         }
     }

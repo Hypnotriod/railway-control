@@ -28,8 +28,8 @@ void TIMER0_Init(unsigned long microseconds, void (*pCallBack)())
     else if((cycles >>= 1) < TIMER0_RESOLUTION) TCCR0 |= (1 << CS02) | (0 << CS01) | (0 << CS00); // prescaller 64
     else if((cycles >>= 1) < TIMER0_RESOLUTION) TCCR0 |= (1 << CS02) | (0 << CS01) | (1 << CS00); // prescaller 128
     else if((cycles >>= 1) < TIMER0_RESOLUTION) TCCR0 |= (1 << CS02) | (1 << CS01) | (0 << CS00); // prescaller 256
-    else if((cycles >>= 2) < TIMER0_RESOLUTION) TCCR0 |= (1 << CS02) | (1 << CS01) | (1 << CS01); // prescaller 1024
-    else            cycles = TIMER0_RESOLUTION, TCCR0 |= (1 << CS02) | (1 << CS01) | (1 << CS01); // set max timer resolution
+    else if((cycles >>= 2) < TIMER0_RESOLUTION) TCCR0 |= (1 << CS02) | (1 << CS01) | (1 << CS00); // prescaller 1024
+    else            cycles = TIMER0_RESOLUTION, TCCR0 |= (1 << CS02) | (1 << CS01) | (1 << CS00); // set max timer resolution
     
     TCCR0 |= (1 << WGM01); // CTC on OCR0
     OCR0   = ((unsigned char)(cycles - 1));

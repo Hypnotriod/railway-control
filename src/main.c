@@ -32,6 +32,6 @@ int main(void)
     while (1)
     {
         UI_Update();
-        _delay_ms(50);
+        _delay_ms(10);
     }
 }
