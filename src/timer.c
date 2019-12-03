@@ -23,13 +23,13 @@ void TIMER0_Init(unsigned long microseconds, void (*pCallBack)())
     cycles = (F_CPU / TIMER_MICROSECONDS_IN_1_SECOND) * microseconds;
     
     if(cycles < TIMER0_RESOLUTION)              TCCR0 |= (0 << CS02) | (0 << CS01) | (1 << CS00); // prescaller 1
-    else if((cycles >>= 3) < TIMER0_RESOLUTION)	TCCR0 |= (0 << CS02) | (1 << CS01) | (0 << CS00); // prescaller 8
-    else if((cycles >>= 2) < TIMER0_RESOLUTION)	TCCR0 |= (0 << CS02) | (1 << CS01) | (1 << CS00); // prescaller 32
-    else if((cycles >>= 1) < TIMER0_RESOLUTION)	TCCR0 |= (1 << CS02) | (0 << CS01) | (0 << CS00); // prescaller 64
-    else if((cycles >>= 1) < TIMER0_RESOLUTION)	TCCR0 |= (1 << CS02) | (0 << CS01) | (1 << CS00); // prescaller 128
-    else if((cycles >>= 1) < TIMER0_RESOLUTION)	TCCR0 |= (1 << CS02) | (1 << CS01) | (0 << CS00); // prescaller 256
-    else if((cycles >>= 2) < TIMER0_RESOLUTION)	TCCR0 |= (1 << CS02) | (1 << CS01) | (1 << CS01); // prescaller 1024
-    else            cycles = TIMER0_RESOLUTION,	TCCR0 |= (1 << CS02) | (1 << CS01) | (1 << CS01); // set max timer resolution
+    else if((cycles >>= 3) < TIMER0_RESOLUTION) TCCR0 |= (0 << CS02) | (1 << CS01) | (0 << CS00); // prescaller 8
+    else if((cycles >>= 2) < TIMER0_RESOLUTION) TCCR0 |= (0 << CS02) | (1 << CS01) | (1 << CS00); // prescaller 32
+    else if((cycles >>= 1) < TIMER0_RESOLUTION) TCCR0 |= (1 << CS02) | (0 << CS01) | (0 << CS00); // prescaller 64
+    else if((cycles >>= 1) < TIMER0_RESOLUTION) TCCR0 |= (1 << CS02) | (0 << CS01) | (1 << CS00); // prescaller 128
+    else if((cycles >>= 1) < TIMER0_RESOLUTION) TCCR0 |= (1 << CS02) | (1 << CS01) | (0 << CS00); // prescaller 256
+    else if((cycles >>= 2) < TIMER0_RESOLUTION) TCCR0 |= (1 << CS02) | (1 << CS01) | (1 << CS01); // prescaller 1024
+    else            cycles = TIMER0_RESOLUTION, TCCR0 |= (1 << CS02) | (1 << CS01) | (1 << CS01); // set max timer resolution
     
     TCCR0 |= (1 << WGM01); // CTC on OCR0
     OCR0   = ((unsigned char)(cycles - 1));

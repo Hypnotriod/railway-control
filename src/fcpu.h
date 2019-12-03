@@ -9,6 +9,6 @@
 #ifndef FCPU_H_
 #define FCPU_H_
 
-#define F_CPU	16000000UL
+#define F_CPU   16000000UL
 
 #endif /* FCPU_H_ */

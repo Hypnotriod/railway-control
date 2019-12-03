@@ -15,9 +15,9 @@
 #define UART0_RX_BUFFER_LENGTH 32
 #define UART0_TX_BUFFER_LENGTH 32
 
-#define UART0_PORT		PORTE
-#define UART0_RX_PIN	0
-#define UART0_TX_PIN	1
+#define UART0_PORT      PORTE
+#define UART0_RX_PIN    0
+#define UART0_TX_PIN    1
 
 void UART0_Init(uint32_t baud);
 void UART0_WriteString(const char* data);
