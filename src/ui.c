@@ -22,7 +22,7 @@ void updateMotorsWithKnobsValues(void);
 
 void UI_Init(void)
 {
-    UI_MANUAL_CONTROL_MODE_DDR &= (~(1 << UI_MANUAL_CONTROL_MODE_INDEX));
+    UI_MANUAL_CONTROL_MODE_DDR  &= (~(1 << UI_MANUAL_CONTROL_MODE_INDEX));
     UI_MANUAL_CONTROL_MODE_PORT |= (1 << UI_MANUAL_CONTROL_MODE_INDEX);
 }
 
@@ -42,6 +42,7 @@ void UI_Update(void)
         if (manualControlIsOn == true) {
             manualControlIsOn = false;
         }
+        Automation_Update();
     }
 }
 
@@ -79,7 +80,11 @@ void updateKnobs(void)
     {
         knobValue = ADC_Read((UI_KNOBS_NUM - 1) - i);
         
-        if (knobsDirections[i] == UI_KNOB_DIR_UP && knobValue >= knobsADCValues[i])
+        if (knobsDirections[i] == UI_KNOB_DIR_BOUTH_WAYS)
+        {
+            knobsADCValues[i] = knobValue;
+        }
+        else if (knobsDirections[i] == UI_KNOB_DIR_UP && knobValue >= knobsADCValues[i])
         {
             knobsADCValues[i] = knobValue;
             knobsDirections[i] = UI_KNOB_DIR_BOUTH_WAYS;
@@ -88,10 +93,6 @@ void updateKnobs(void)
         {
             knobsADCValues[i] = knobValue;
             knobsDirections[i] = UI_KNOB_DIR_BOUTH_WAYS;
-        }
-        else
-        {
-            knobsADCValues[i] = knobValue;
         }
     }
 }

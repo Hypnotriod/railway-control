@@ -15,6 +15,9 @@
 #include "ir.h"
 #include "pwm.h"
 #include "timer.h"
+#include "uart.h"
+
+#define UART0_BAUD_RATE 9600
 
 int main(void)
 {
@@ -22,8 +25,9 @@ int main(void)
     PWM_Init();
     IR_Init();
     ADC_Init();
-    Automation_Init();
     UI_Init();
+    UART0_Init(UART0_BAUD_RATE);
+    Automation_Init();
     
     while (1)
     {

@@ -29,6 +29,8 @@
 #define MOTORS_DIR6_PORT	PORTB
 #define MOTORS_DIR6_INDEX	2
 
+#define MOTORS_NUM		        6
+
 enum Motors_Direction
 {
     MOTORS_DIRECTION_FORWARD,

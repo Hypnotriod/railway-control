@@ -46,6 +46,9 @@
 #define IR_SIG12_PIN	PINC
 #define IR_SIG12_INDEX	4
 
+#define IR_NUM	        12
+
 void IR_Init(void);
+bool IR_Read(uint8_t index);
 
 #endif /* IR_H_ */

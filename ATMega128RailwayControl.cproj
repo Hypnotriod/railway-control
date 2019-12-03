@@ -159,10 +159,22 @@
     <Compile Include="src\pwm.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\state.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\state.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\timer.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\timer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\uart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\uart.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\ui.c">
