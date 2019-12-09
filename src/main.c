@@ -12,10 +12,11 @@
 #include "automation.h"
 #include "motors.h"
 #include "adc.h"
-#include "ir.h"
+#include "sensors.h"
 #include "pwm.h"
 #include "timer.h"
 #include "uart.h"
+#include "cmd_parser.h"
 
 #define UART0_BAUD_RATE 9600
 
@@ -23,7 +24,7 @@ int main(void)
 {
     Motors_Init();
     PWM_Init();
-    IR_Init();
+    Sensors_Init();
     ADC_Init();
     UI_Init();
     UART0_Init(UART0_BAUD_RATE);
@@ -31,6 +32,7 @@ int main(void)
     
     while (1)
     {
+        CmdParser_Update();
         UI_Update();
         _delay_ms(10);
     }

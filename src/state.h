@@ -17,6 +17,12 @@
 #define State_SaveEEPROMKey()           (eeprom_write_dword((uint32_t*)&_eepromBuffer[508], EEPROM_KEY))
 #define State_ReadEEPROMKey(_value_)    (eeprom_read_dword((uint32_t*)&_eepromBuffer[508]))
 
-extern uint8_t _eepromBuffer[EEPROM_SIZE] EEMEM;
+void State_SaveSensorRailwayIndex(uint8_t sensorIndex, uint8_t railwayIndex);
+void State_SaveSensorTimeoutSeconds(uint8_t sensorIndex, uint16_t timeoutSeconds);
+
+uint8_t State_ReadSensorRailwayIndex(uint8_t sensorIndex);
+uint16_t State_ReadSensorTimeoutSeconds(uint8_t sensorIndex);
+
+extern uint8_t eepromBuffer[EEPROM_SIZE] EEMEM;
 
 #endif /* STATE_H_ */

@@ -33,8 +33,8 @@
 
 enum Motors_Direction
 {
-    MOTORS_DIRECTION_FORWARD,
-    MOTORS_DIRECTION_BACKWARD
+    MOTORS_DIRECTION_FORWARD    = 0,
+    MOTORS_DIRECTION_BACKWARD   = 1
 };
 
 void Motors_Init(void);

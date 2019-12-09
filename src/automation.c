@@ -7,8 +7,9 @@
 
 #include "automation.h"
 #include "motors.h"
-#include "ir.h"
+#include "sensors.h"
 #include "timer.h"
+#include "state.h"
 
 struct Automation_RailwayConfigStruct raiwals[AUTOMATION_RAILWAYS_NUM];
 struct Automation_IRSensorConfigStruct sensors[AUTOMATION_SENSORS_NUM];
@@ -42,9 +43,9 @@ void Automation_Reset(void)
     for (i = 0; i < AUTOMATION_SENSORS_NUM; i++)
     {
         sensors[i].isTriggered = false;
-        sensors[i].direction = MOTORS_DIRECTION_FORWARD;
-        sensors[i].railwayIndex = 5; //todo: Get mapped railway index
-        sensors[i].timeoutSeconds = 5; //todo: Get mapped timeout
+        sensors[i].direction = MOTORS_DIRECTION_FORWARD; //todo: Get mapped direction
+        sensors[i].railwayIndex = State_ReadSensorRailwayIndex(i);
+        sensors[i].timeoutSeconds = State_ReadSensorTimeoutSeconds(i);
     }
 }
 
@@ -69,7 +70,7 @@ void updateIRSensorsState(void)
     {
         railwayIndex = sensors[i].railwayIndex;
         
-        if (IR_Read(i))
+        if (Sensors_Read(i))
         {
             if (sensors[i].isTriggered == false)
             {
@@ -82,7 +83,7 @@ void updateIRSensorsState(void)
         else
         {
             sensors[i].isTriggered = false;
-        }        
+        }
     }
 }
 
@@ -97,14 +98,14 @@ void updateMotorsState(void)
             raiwals[i].speedCurrent += AUTOMATION_MOTOR_SPEED_INCREMENTATION_STEP;
             if (raiwals[i].speedCurrent > raiwals[i].speed) {
                 raiwals[i].speedCurrent = raiwals[i].speed;
-            }         
+            }
         }
         else if (raiwals[i].speedCurrent > raiwals[i].speed)
         {
             raiwals[i].speedCurrent -= AUTOMATION_MOTOR_SPEED_INCREMENTATION_STEP;
             if (raiwals[i].speedCurrent < raiwals[i].speed) {
                 raiwals[i].speedCurrent = raiwals[i].speed;
-            }           
+            }
         }
         Motors_SetSpeed(i, raiwals[i].speedCurrent);
         Motors_SetDirection(i, raiwals[i].direction);
