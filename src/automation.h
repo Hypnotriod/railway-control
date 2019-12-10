@@ -18,7 +18,7 @@
 #define AUTOMATION_RAILWAYS_NUM                     MOTORS_NUM
 #define AUTOMATION_SENSORS_NUM                      SENSORS_NUM
 
-struct Automation_IRSensorConfigStruct
+struct Automation_SensorConfigStruct
 {
     bool isTriggered;
     uint8_t railwayIndex;
@@ -37,8 +37,9 @@ struct Automation_RailwayConfigStruct
 void Automation_Init(void);
 void Automation_Update(void);
 void Automation_Reset(void);
+void Automation_Apply(void);
 
 extern struct Automation_RailwayConfigStruct raiwals[AUTOMATION_RAILWAYS_NUM];
-extern struct Automation_IRSensorConfigStruct sensors[AUTOMATION_SENSORS_NUM];
+extern struct Automation_SensorConfigStruct sensors[AUTOMATION_SENSORS_NUM];
 
 #endif /* AUTOMATION_H_ */

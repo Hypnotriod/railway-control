@@ -10,6 +10,6 @@
 bool Utils_CompareStrings(const char * str1, const char * str2, uint16_t length);
 uint16_t Utils_GetStringLength(const char * str);
 uint16_t Utils_GetStringLengthLimit(const char * str, uint16_t limit);
-int32_t Utils_ParseInt(const char * str);
+uint16_t Utils_ParseInt(const char * str);
 
 #endif

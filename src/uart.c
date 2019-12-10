@@ -36,6 +36,7 @@ void UART0_WriteString(const char* data)
     while(*data)
     {
         uart0TXBuffer[uart0TXBufferWriteIndex] = *data++;
+        while(((uart0TXBufferWriteIndex + 1) % UART0_TX_BUFFER_LENGTH) == uart0TXBufferReadIndex){};	
         uart0TXBufferWriteIndex = (uart0TXBufferWriteIndex + 1) % UART0_TX_BUFFER_LENGTH;
     }
     

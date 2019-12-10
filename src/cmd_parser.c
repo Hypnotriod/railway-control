@@ -5,6 +5,7 @@
 *  Author: Ilya Pikin
 */
 
+#include <stdio.h>
 #include "cmd_parser.h"
 #include "uart.h"
 #include "utils.h"
@@ -19,8 +20,9 @@ int8_t cmdBufferIndex = -1;
 *   Command execute example:    #ABCDEF?
 */
 
-inline void CmdParser_ExecuteCommand(void);
-inline void CmdParser_ExecuteSetParam(void);
+void CmdParser_ExecuteCommand(void);
+void CmdParser_ExecuteSetParam(void);
+void CmdParser_SendParam(const char* cmd, uint8_t index, uint16_t value);
 
 void CmdParser_Update(void)
 {
@@ -32,24 +34,25 @@ void CmdParser_Update(void)
         
         if (cmdBufferIndex == -1)
         {
-            if (nextChar == CMD_PARSER_CMD_START)
+            if (nextChar == CMD_PARSER_CHAR_START)
             {
                 cmdBufferIndex = 0;
             }
         }
-        else if (nextChar == CMD_PARSER_CMD_START)
+        else if (nextChar == CMD_PARSER_CHAR_START)
         {
             cmdBufferIndex = 0;
         }
         else if (cmdBufferIndex == CMD_PARSER_CMD_FULL_LENGTH)
         {
-            if (nextChar == CMD_PARSER_CMD_EXEC)
+            if (nextChar == CMD_PARSER_CHAR_EXEC)
             {
                 CmdParser_ExecuteCommand();
                 cmdBufferIndex = -1;
             }
-            else if (nextChar == CMD_PARSER_CMD_SET)
+            else if (nextChar == CMD_PARSER_CHAR_SET)
             {
+                cmdBuffer[cmdBufferIndex] = nextChar;
                 cmdBufferIndex++;
             }
             else {
@@ -58,13 +61,13 @@ void CmdParser_Update(void)
         }
         else if (cmdBufferIndex > CMD_PARSER_CMD_FULL_LENGTH)
         {
-            if ((cmdBufferIndex == (CMD_PARSER_CMD_FULL_LENGTH + 1) && nextChar == '-') || (nextChar >= '0' && nextChar <= '9'))
+            if (nextChar >= '0' && nextChar <= '9')
             {
                 cmdBuffer[cmdBufferIndex] = nextChar;
                 cmdBufferIndex++;
                 if (cmdBufferIndex == CMD_PARSER_BUFFER_LENGTH) cmdBufferIndex = -1;
             }
-            else if (nextChar == CMD_PARSER_CMD_END)
+            else if (nextChar == CMD_PARSER_CHAR_END)
             {
                 cmdBuffer[cmdBufferIndex] = nextChar;
                 CmdParser_ExecuteSetParam();
@@ -83,25 +86,75 @@ void CmdParser_Update(void)
     }
 }
 
-inline void CmdParser_ExecuteCommand(void)
+void CmdParser_ExecuteCommand(void)
 {
+    int i;
     
+    if (Utils_CompareStrings(cmdBuffer, CMD_STATUS, CMD_PARSER_CMD_FULL_LENGTH))
+    {
+        for (i = 0; i < AUTOMATION_RAILWAYS_NUM; i++)
+        {
+            CmdParser_SendParam(CMD_RWSP, i, State_ReadRailwaySpeed(i));
+        }
+        
+        for (i = 0; i < AUTOMATION_SENSORS_NUM; i++)
+        {
+            CmdParser_SendParam(CMD_SRWI, i, State_ReadSensorRailwayIndex(i));
+            CmdParser_SendParam(CMD_STOS, i, State_ReadSensorTimeoutSeconds(i));
+            CmdParser_SendParam(CMD_SDIR, i, State_ReadSensorDirection(i));
+        }
+    }
+    else if (Utils_CompareStrings(cmdBuffer, CMD_FRESET, CMD_PARSER_CMD_FULL_LENGTH))
+    {
+        State_Reset();
+        Automation_Apply();
+        UART0_WriteString("Full Reset complete!");
+    }
 }
 
-inline void CmdParser_ExecuteSetParam(void)
+void CmdParser_ExecuteSetParam(void)
 {
-    uint8_t index;
-    int32_t value;
+    uint16_t index;
+    uint16_t value;
     
     index = Utils_ParseInt(&cmdBuffer[CMD_PARSER_CMD_EXEC_LENGTH]);
     value = Utils_ParseInt(&cmdBuffer[(CMD_PARSER_CMD_FULL_LENGTH + 1)]);
     
     if (Utils_CompareStrings(cmdBuffer, CMD_SRWI, CMD_PARSER_CMD_EXEC_LENGTH))
     {
+        index %= AUTOMATION_SENSORS_NUM;
+        value %= AUTOMATION_RAILWAYS_NUM;
         State_SaveSensorRailwayIndex(index, value);
+        CmdParser_SendParam(CMD_SRWI, index, value);
+        Automation_Apply();
     }
     else if (Utils_CompareStrings(cmdBuffer, CMD_STOS, CMD_PARSER_CMD_EXEC_LENGTH))
     {
+        index %= AUTOMATION_SENSORS_NUM;
         State_SaveSensorTimeoutSeconds(index, value);
+        CmdParser_SendParam(CMD_STOS, index, value);
+        Automation_Apply();
     }
+    else if (Utils_CompareStrings(cmdBuffer, CMD_SDIR, CMD_PARSER_CMD_EXEC_LENGTH))
+    {
+        index %= AUTOMATION_SENSORS_NUM;
+        if (value > (MOTORS_DIRECTION_BACKWARD + 1)) value = MOTORS_DIRECTION_BACKWARD;
+        State_SaveSensorDirection(index, value);
+        CmdParser_SendParam(CMD_SDIR, index, value);
+        Automation_Apply();
+    }
+    else if (Utils_CompareStrings(cmdBuffer, CMD_RWSP, CMD_PARSER_CMD_EXEC_LENGTH))
+    {
+        index %= AUTOMATION_RAILWAYS_NUM;
+        if (value > 100) value = 100;
+        State_SaveRailwaySpeed(index, value);
+        CmdParser_SendParam(CMD_RWSP, index, value);
+        Automation_Apply();
+    }
+}
+
+void CmdParser_SendParam(const char* cmd, uint8_t index, uint16_t value)
+{
+    sprintf(cmdBuffer, "#%s%02i=%i@\n", cmd, index, value);
+    UART0_WriteString(cmdBuffer);
 }

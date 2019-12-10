@@ -33,18 +33,16 @@ uint16_t Utils_GetStringLengthLimit(const char * str, uint16_t limit)
     return length;
 }
 
-int32_t Utils_ParseInt(const char * str)
+uint16_t Utils_ParseInt(const char * str)
 {
-    uint32_t result = 0;
+    uint16_t result = 0;
     uint8_t  i;
      
-    for(i = (str[0] == '-' ? 0 : 1); str[i] >= '0' && str[i] <= '9'; i++)
+    for(i = 0; str[i] >= '0' && str[i] <= '9'; i++)
     {
         result *= 10;
         result += (str[i] - '0');
     }
-    
-    if(str[0] == '-') result *= -1L;
     
     return result;
 }

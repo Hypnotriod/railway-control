@@ -12,7 +12,7 @@
 #include "state.h"
 
 struct Automation_RailwayConfigStruct raiwals[AUTOMATION_RAILWAYS_NUM];
-struct Automation_IRSensorConfigStruct sensors[AUTOMATION_SENSORS_NUM];
+struct Automation_SensorConfigStruct sensors[AUTOMATION_SENSORS_NUM];
 
 volatile uint16_t timer0InterruptsCounter = 0;
 volatile uint16_t secondsPassed = 0;
@@ -20,7 +20,7 @@ volatile uint16_t secondsPassed = 0;
 void timer0Callback(void);
 void updateOnSecondPassed(void);
 void updateMotorsState(void);
-void updateIRSensorsState(void);
+void updateSensorsState(void);
 
 void Automation_Init(void)
 {
@@ -35,15 +35,33 @@ void Automation_Reset(void)
     for (i = 0; i < AUTOMATION_RAILWAYS_NUM; i++)
     {
         raiwals[i].direction = MOTORS_DIRECTION_FORWARD;
-        raiwals[i].speed = 1.0f; //todo: Get Top speed per railway
+        raiwals[i].speed = (float)State_ReadRailwaySpeed(i) / 100.f;
         raiwals[i].speedCurrent = AUTOMATION_MOTOR_START_SPEED;
         raiwals[i].timeoutSeconds = 0;
+        Motors_SetDirection(i, raiwals[i].direction);
     }
     
     for (i = 0; i < AUTOMATION_SENSORS_NUM; i++)
     {
         sensors[i].isTriggered = false;
-        sensors[i].direction = MOTORS_DIRECTION_FORWARD; //todo: Get mapped direction
+        sensors[i].direction = State_ReadSensorDirection(i);
+        sensors[i].railwayIndex = State_ReadSensorRailwayIndex(i);
+        sensors[i].timeoutSeconds = State_ReadSensorTimeoutSeconds(i);
+    }
+}
+
+void Automation_Apply(void)
+{
+    uint8_t i;
+    
+    for (i = 0; i < AUTOMATION_RAILWAYS_NUM; i++)
+    {
+        raiwals[i].speed = (float)State_ReadRailwaySpeed(i) / 100.f;
+    }
+    
+    for (i = 0; i < AUTOMATION_SENSORS_NUM; i++)
+    {
+        sensors[i].direction = State_ReadSensorDirection(i);
         sensors[i].railwayIndex = State_ReadSensorRailwayIndex(i);
         sensors[i].timeoutSeconds = State_ReadSensorTimeoutSeconds(i);
     }
@@ -51,7 +69,7 @@ void Automation_Reset(void)
 
 void Automation_Update(void)
 {
-    updateIRSensorsState();
+    updateSensorsState();
     updateMotorsState();
     
     if (secondsPassed != 0)
@@ -61,7 +79,7 @@ void Automation_Update(void)
     }
 }
 
-void updateIRSensorsState(void)
+void updateSensorsState(void)
 {
     uint8_t i;
     uint8_t railwayIndex;
@@ -75,9 +93,14 @@ void updateIRSensorsState(void)
             if (sensors[i].isTriggered == false)
             {
                 sensors[i].isTriggered = true;
-                raiwals[railwayIndex].speed = 0.0f;
-                raiwals[railwayIndex].timeoutSeconds = sensors[i].timeoutSeconds;
-                raiwals[railwayIndex].direction = sensors[i].direction;
+                
+                if (sensors[i].timeoutSeconds != 0)
+                {
+                    raiwals[railwayIndex].speed = 0.0f;
+                    raiwals[railwayIndex].timeoutSeconds = sensors[i].timeoutSeconds;
+                    raiwals[railwayIndex].direction = sensors[i].direction;
+                }
+                
             }
         }
         else
@@ -108,7 +131,6 @@ void updateMotorsState(void)
             }
         }
         Motors_SetSpeed(i, raiwals[i].speedCurrent);
-        Motors_SetDirection(i, raiwals[i].direction);
     }
 }
 
@@ -121,8 +143,9 @@ void updateOnSecondPassed(void)
         if (raiwals[i].timeoutSeconds > 0) {
             raiwals[i].timeoutSeconds--;
             if (raiwals[i].timeoutSeconds == 0) {
-                raiwals[i].speed = 1.0f; //todo: Get Top speed per railway
+                raiwals[i].speed = (float)State_ReadRailwaySpeed(i) / 100.f;
                 raiwals[i].speedCurrent = AUTOMATION_MOTOR_START_SPEED;
+                Motors_SetDirection(i, raiwals[i].direction);
             }
         }
     }

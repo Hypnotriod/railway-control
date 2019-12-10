@@ -17,11 +17,13 @@
 #include "timer.h"
 #include "uart.h"
 #include "cmd_parser.h"
+#include "state.h"
 
 #define UART0_BAUD_RATE 9600
 
 int main(void)
 {
+    State_Init();
     Motors_Init();
     PWM_Init();
     Sensors_Init();
