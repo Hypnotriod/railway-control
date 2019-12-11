@@ -28,61 +28,60 @@ void CmdParser_Update(void)
 {
     char nextChar;
     
-    if (UART0_Available())
+    if (!UART0_Available()) return;
+    
+    nextChar = UART0_ReadChar();
+    
+    if (cmdBufferIndex == -1)
     {
-        nextChar = UART0_ReadChar();
-        
-        if (cmdBufferIndex == -1)
-        {
-            if (nextChar == CMD_PARSER_CHAR_START)
-            {
-                cmdBufferIndex = 0;
-            }
-        }
-        else if (nextChar == CMD_PARSER_CHAR_START)
+        if (nextChar == CMD_PARSER_CHAR_START)
         {
             cmdBufferIndex = 0;
         }
-        else if (cmdBufferIndex == CMD_PARSER_CMD_FULL_LENGTH)
+    }
+    else if (nextChar == CMD_PARSER_CHAR_START)
+    {
+        cmdBufferIndex = 0;
+    }
+    else if (cmdBufferIndex == CMD_PARSER_CMD_FULL_LENGTH)
+    {
+        if (nextChar == CMD_PARSER_CHAR_EXEC)
         {
-            if (nextChar == CMD_PARSER_CHAR_EXEC)
-            {
-                CmdParser_ExecuteCommand();
-                cmdBufferIndex = -1;
-            }
-            else if (nextChar == CMD_PARSER_CHAR_SET)
-            {
-                cmdBuffer[cmdBufferIndex] = nextChar;
-                cmdBufferIndex++;
-            }
-            else {
-                cmdBufferIndex = -1;
-            }
+            CmdParser_ExecuteCommand();
+            cmdBufferIndex = -1;
         }
-        else if (cmdBufferIndex > CMD_PARSER_CMD_FULL_LENGTH)
-        {
-            if (nextChar >= '0' && nextChar <= '9')
-            {
-                cmdBuffer[cmdBufferIndex] = nextChar;
-                cmdBufferIndex++;
-                if (cmdBufferIndex == CMD_PARSER_BUFFER_LENGTH) cmdBufferIndex = -1;
-            }
-            else if (nextChar == CMD_PARSER_CHAR_END)
-            {
-                cmdBuffer[cmdBufferIndex] = nextChar;
-                CmdParser_ExecuteSetParam();
-                cmdBufferIndex = -1;
-            }
-            else
-            {
-                cmdBufferIndex = -1;
-            }
-        }
-        else
+        else if (nextChar == CMD_PARSER_CHAR_SET)
         {
             cmdBuffer[cmdBufferIndex] = nextChar;
             cmdBufferIndex++;
         }
+        else {
+            cmdBufferIndex = -1;
+        }
+    }
+    else if (cmdBufferIndex > CMD_PARSER_CMD_FULL_LENGTH)
+    {
+        if (Utils_CheckIfCharIsNumber(nextChar))
+        {
+            cmdBuffer[cmdBufferIndex] = nextChar;
+            cmdBufferIndex++;
+            if (cmdBufferIndex == CMD_PARSER_BUFFER_LENGTH) cmdBufferIndex = -1;
+        }
+        else if (nextChar == CMD_PARSER_CHAR_END)
+        {
+            cmdBuffer[cmdBufferIndex] = nextChar;
+            CmdParser_ExecuteSetParam();
+            cmdBufferIndex = -1;
+        }
+        else
+        {
+            cmdBufferIndex = -1;
+        }
+    }
+    else
+    {
+        cmdBuffer[cmdBufferIndex] = nextChar;
+        cmdBufferIndex++;
     }
 }
 
@@ -117,8 +116,11 @@ void CmdParser_ExecuteSetParam(void)
     uint16_t index;
     uint16_t value;
     
-    index = Utils_ParseInt(&cmdBuffer[CMD_PARSER_CMD_EXEC_LENGTH]);
-    value = Utils_ParseInt(&cmdBuffer[(CMD_PARSER_CMD_FULL_LENGTH + 1)]);
+    if (Utils_CheckIfCharIsNumber(cmdBuffer[CMD_PARSER_CMD_EXEC_LENGTH]) == false
+    || Utils_CheckIfCharIsNumber(cmdBuffer[CMD_PARSER_CMD_EXEC_LENGTH + 1]) == false) return;
+    
+    index = Utils_ParseUnsignedInt(&cmdBuffer[CMD_PARSER_CMD_EXEC_LENGTH]);
+    value = Utils_ParseUnsignedInt(&cmdBuffer[(CMD_PARSER_CMD_FULL_LENGTH + 1)]);
     
     if (Utils_CompareStrings(cmdBuffer, CMD_SRWI, CMD_PARSER_CMD_EXEC_LENGTH))
     {

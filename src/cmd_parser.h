@@ -1,20 +1,19 @@
 ﻿/*
- * cmd_parser.h
- *
- * Created: 09.12.2019 22:13:02
- *  Author: Ilya Pikin
- */ 
-
+* cmd_parser.h
+*
+* Created: 09.12.2019 22:13:02
+*  Author: Ilya Pikin
+*/
 
 #ifndef CMD_PARSER_H_
 #define CMD_PARSER_H_
 
-#define CMD_SRWI    "SRWI"      // Sensor railway index
-#define CMD_STOS    "STOS"      // Sensor timeout seconds
-#define CMD_SDIR    "SDIR"      // Sensor direction
-#define CMD_RWSP    "RWSP"      // Railway speed
+#define CMD_SRWI    "SRWI"      // Sensor Railway Index
+#define CMD_STOS    "STOS"      // Sensor Timeout Seconds
+#define CMD_SDIR    "SDIR"      // Sensor Direction
+#define CMD_RWSP    "RWSP"      // Railway Speed
 #define CMD_STATUS  "STATUS"    // Status
-#define CMD_FRESET  "FRESET"    // Full reset 
+#define CMD_FRESET  "FRESET"    // Full Reset
 
 #define CMD_PARSER_BUFFER_LENGTH        16
 #define CMD_PARSER_CMD_FULL_LENGTH      6

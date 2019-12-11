@@ -48,6 +48,8 @@ void Automation_Reset(void)
         sensors[i].railwayIndex = State_ReadSensorRailwayIndex(i);
         sensors[i].timeoutSeconds = State_ReadSensorTimeoutSeconds(i);
     }
+    
+    secondsPassed = 0;
 }
 
 void Automation_Apply(void)
@@ -99,8 +101,7 @@ void updateSensorsState(void)
                     raiwals[railwayIndex].speed = 0.0f;
                     raiwals[railwayIndex].timeoutSeconds = sensors[i].timeoutSeconds;
                     raiwals[railwayIndex].direction = sensors[i].direction;
-                }
-                
+                }           
             }
         }
         else

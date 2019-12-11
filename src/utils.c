@@ -33,15 +33,15 @@ uint16_t Utils_GetStringLengthLimit(const char * str, uint16_t limit)
     return length;
 }
 
-uint16_t Utils_ParseInt(const char * str)
+uint16_t Utils_ParseUnsignedInt(const char * str)
 {
     uint16_t result = 0;
-    uint8_t  i;
-     
-    for(i = 0; str[i] >= '0' && str[i] <= '9'; i++)
+    
+    while(Utils_CheckIfCharIsNumber(*str))
     {
         result *= 10;
-        result += (str[i] - '0');
+        result += Utils_CharToNumber(*str);
+        str++;
     }
     
     return result;
