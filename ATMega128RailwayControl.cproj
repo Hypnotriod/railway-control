@@ -141,6 +141,12 @@
     <Compile Include="src\cmd_parser.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\strings.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\strings.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\fcpu.h">
       <SubType>compile</SubType>
     </Compile>

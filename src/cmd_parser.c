@@ -11,6 +11,7 @@
 #include "utils.h"
 #include "automation.h"
 #include "state.h"
+#include "strings.h"
 
 char   cmdBuffer[CMD_PARSER_BUFFER_LENGTH] = {0};
 int8_t cmdBufferIndex = -1;
@@ -107,7 +108,7 @@ void CmdParser_ExecuteCommand(void)
     {
         State_Reset();
         Automation_Apply();
-        UART0_WriteString("Full Reset complete!");
+        UART0_WriteString(STR_FULL_RESET_COMPLETE);
     }
 }
 
@@ -157,6 +158,6 @@ void CmdParser_ExecuteSetParam(void)
 
 void CmdParser_SendParam(const char* cmd, uint8_t index, uint16_t value)
 {
-    sprintf(cmdBuffer, "#%s%02i=%i@\n", cmd, index, value);
-    UART0_WriteString(cmdBuffer);
+    sprintf(StrBuff, STR_COMMAND_PATTERN, cmd, index, value);
+    UART0_WriteString(StrBuff);
 }

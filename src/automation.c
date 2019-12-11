@@ -5,11 +5,14 @@
 *  Author: Ilya Pikin
 */
 
+#include <stdio.h>
 #include "automation.h"
 #include "motors.h"
 #include "sensors.h"
 #include "timer.h"
 #include "state.h"
+#include "uart.h"
+#include "strings.h"
 
 struct Automation_RailwayConfigStruct raiwals[AUTOMATION_RAILWAYS_NUM];
 struct Automation_SensorConfigStruct sensors[AUTOMATION_SENSORS_NUM];
@@ -101,12 +104,17 @@ void updateSensorsState(void)
                     raiwals[railwayIndex].speed = 0.0f;
                     raiwals[railwayIndex].timeoutSeconds = sensors[i].timeoutSeconds;
                     raiwals[railwayIndex].direction = sensors[i].direction;
-                }           
+                }
+                
+                sprintf(StrBuff, STR_SENSOR_STATE_CHANGED_TO_HIGH, i);
+                UART0_WriteString(StrBuff);
             }
         }
-        else
+        else if (sensors[i].isTriggered)
         {
             sensors[i].isTriggered = false;
+            sprintf(StrBuff, STR_SENSOR_STATE_CHANGED_TO_LOW, i);
+            UART0_WriteString(StrBuff);
         }
     }
 }

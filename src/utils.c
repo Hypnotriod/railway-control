@@ -1,3 +1,9 @@
+/*
+ * cstrings.h
+ *
+ * Created: 11.12.2019 21:30:24
+ *  Author: Ilya Pikin
+ */ 
 
 #include "utils.h"
 
