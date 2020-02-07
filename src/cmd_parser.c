@@ -95,13 +95,14 @@ void CmdParser_ExecuteCommand(void)
         for (i = 0; i < AUTOMATION_RAILWAYS_NUM; i++)
         {
             CmdParser_SendParam(CMD_RWSP, i, State_ReadRailwaySpeed(i));
+            CmdParser_SendParam(CMD_RWAT, i, State_ReadRailwayActivationTimeoutSeconds(i));
         }
         
         for (i = 0; i < AUTOMATION_SENSORS_NUM; i++)
         {
             CmdParser_SendParam(CMD_SRWI, i, State_ReadSensorRailwayIndex(i));
-            CmdParser_SendParam(CMD_STOS, i, State_ReadSensorTimeoutSeconds(i));
-            CmdParser_SendParam(CMD_SDIR, i, State_ReadSensorDirection(i));
+            CmdParser_SendParam(CMD_SRWT, i, State_ReadSensorRailwayStopTimeoutSeconds(i));
+            CmdParser_SendParam(CMD_SRWD, i, State_ReadSensorRailwayDirection(i));
         }
     }
     else if (Utils_CompareStrings(cmdBuffer, CMD_FRESET, CMD_PARSER_CMD_FULL_LENGTH))
@@ -131,19 +132,19 @@ void CmdParser_ExecuteSetParam(void)
         CmdParser_SendParam(CMD_SRWI, index, value);
         Automation_Apply();
     }
-    else if (Utils_CompareStrings(cmdBuffer, CMD_STOS, CMD_PARSER_CMD_EXEC_LENGTH))
+    else if (Utils_CompareStrings(cmdBuffer, CMD_SRWT, CMD_PARSER_CMD_EXEC_LENGTH))
     {
         index %= AUTOMATION_SENSORS_NUM;
-        State_SaveSensorTimeoutSeconds(index, value);
-        CmdParser_SendParam(CMD_STOS, index, value);
+        State_SaveSensorRailwayStopTimeoutSeconds(index, value);
+        CmdParser_SendParam(CMD_SRWT, index, value);
         Automation_Apply();
     }
-    else if (Utils_CompareStrings(cmdBuffer, CMD_SDIR, CMD_PARSER_CMD_EXEC_LENGTH))
+    else if (Utils_CompareStrings(cmdBuffer, CMD_SRWD, CMD_PARSER_CMD_EXEC_LENGTH))
     {
         index %= AUTOMATION_SENSORS_NUM;
         if (value > (MOTORS_DIRECTION_BACKWARD + 1)) value = MOTORS_DIRECTION_BACKWARD;
-        State_SaveSensorDirection(index, value);
-        CmdParser_SendParam(CMD_SDIR, index, value);
+        State_SaveSensorRailwayDirection(index, value);
+        CmdParser_SendParam(CMD_SRWD, index, value);
         Automation_Apply();
     }
     else if (Utils_CompareStrings(cmdBuffer, CMD_RWSP, CMD_PARSER_CMD_EXEC_LENGTH))
@@ -153,6 +154,12 @@ void CmdParser_ExecuteSetParam(void)
         State_SaveRailwaySpeed(index, value);
         CmdParser_SendParam(CMD_RWSP, index, value);
         Automation_Apply();
+    }
+    else if (Utils_CompareStrings(cmdBuffer, CMD_RWAT, CMD_PARSER_CMD_EXEC_LENGTH))
+    {
+        index %= AUTOMATION_RAILWAYS_NUM;
+        State_SaveRailwayActivationTimeoutSeconds(index, value);
+        CmdParser_SendParam(CMD_RWAT, index, value);
     }
 }
 

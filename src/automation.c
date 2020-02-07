@@ -40,16 +40,17 @@ void Automation_Reset(void)
         raiwals[i].direction = MOTORS_DIRECTION_FORWARD;
         raiwals[i].speed = (float)State_ReadRailwaySpeed(i) / 100.f;
         raiwals[i].speedCurrent = AUTOMATION_MOTOR_START_SPEED;
-        raiwals[i].timeoutSeconds = 0;
+        raiwals[i].stopTimeoutSeconds = 0;
+        raiwals[i].activationTimeoutSeconds = 0;
         Motors_SetDirection(i, raiwals[i].direction);
     }
     
     for (i = 0; i < AUTOMATION_SENSORS_NUM; i++)
     {
         sensors[i].isTriggered = false;
-        sensors[i].direction = State_ReadSensorDirection(i);
+        sensors[i].direction = State_ReadSensorRailwayDirection(i);
         sensors[i].railwayIndex = State_ReadSensorRailwayIndex(i);
-        sensors[i].timeoutSeconds = State_ReadSensorTimeoutSeconds(i);
+        sensors[i].railwayStopTimeoutSeconds = State_ReadSensorRailwayStopTimeoutSeconds(i);
     }
     
     secondsPassed = 0;
@@ -66,9 +67,9 @@ void Automation_Apply(void)
     
     for (i = 0; i < AUTOMATION_SENSORS_NUM; i++)
     {
-        sensors[i].direction = State_ReadSensorDirection(i);
+        sensors[i].direction = State_ReadSensorRailwayDirection(i);
         sensors[i].railwayIndex = State_ReadSensorRailwayIndex(i);
-        sensors[i].timeoutSeconds = State_ReadSensorTimeoutSeconds(i);
+        sensors[i].railwayStopTimeoutSeconds = State_ReadSensorRailwayStopTimeoutSeconds(i);
     }
 }
 
@@ -99,10 +100,12 @@ void updateSensorsState(void)
             {
                 sensors[i].isTriggered = true;
                 
-                if (sensors[i].timeoutSeconds != 0)
+                if (sensors[i].railwayStopTimeoutSeconds != 0 &&
+                    raiwals[railwayIndex].stopTimeoutSeconds == 0 &&
+                    raiwals[railwayIndex].activationTimeoutSeconds == 0)
                 {
                     raiwals[railwayIndex].speed = 0.0f;
-                    raiwals[railwayIndex].timeoutSeconds = sensors[i].timeoutSeconds;
+                    raiwals[railwayIndex].stopTimeoutSeconds = sensors[i].railwayStopTimeoutSeconds;
                     raiwals[railwayIndex].direction = sensors[i].direction;
                 }
                 
@@ -149,11 +152,15 @@ void updateOnSecondPassed(void)
     
     for (i = 0; i < AUTOMATION_RAILWAYS_NUM; i++)
     {
-        if (raiwals[i].timeoutSeconds > 0) {
-            raiwals[i].timeoutSeconds--;
-            if (raiwals[i].timeoutSeconds == 0) {
+        if (raiwals[i].activationTimeoutSeconds > 0) {
+            raiwals[i].activationTimeoutSeconds--;
+        }
+        if (raiwals[i].stopTimeoutSeconds > 0) {
+            raiwals[i].stopTimeoutSeconds--;
+            if (raiwals[i].stopTimeoutSeconds == 0) {
                 raiwals[i].speed = (float)State_ReadRailwaySpeed(i) / 100.f;
                 raiwals[i].speedCurrent = AUTOMATION_MOTOR_START_SPEED;
+                raiwals[i].activationTimeoutSeconds = State_ReadRailwayActivationTimeoutSeconds(i);
                 Motors_SetDirection(i, raiwals[i].direction);
             }
         }

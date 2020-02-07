@@ -26,13 +26,14 @@ void State_Reset(void)
     for (i = 0; i < AUTOMATION_RAILWAYS_NUM; i++)
     {
         State_SaveRailwaySpeed(i, 0);
+        State_SaveRailwayActivationTimeoutSeconds(i, 0);
     }
     
     for (i = 0; i < AUTOMATION_SENSORS_NUM; i++)
     {
         State_SaveSensorRailwayIndex(i, 0);
-        State_SaveSensorTimeoutSeconds(i, 0);
-        State_SaveSensorDirection(i, 0);
+        State_SaveSensorRailwayStopTimeoutSeconds(i, 0);
+        State_SaveSensorRailwayDirection(i, 0);
     }
     
     State_SaveEEPROMKey();
@@ -49,23 +50,23 @@ uint8_t State_ReadSensorRailwayIndex(uint8_t sensorIndex)
 }
 
 
-void State_SaveSensorTimeoutSeconds(uint8_t sensorIndex, uint16_t timeoutSeconds)
+void State_SaveSensorRailwayStopTimeoutSeconds(uint8_t sensorIndex, uint16_t timeoutSeconds)
 {
     eeprom_write_word((uint16_t*)&eepromBuffer[12 + (sensorIndex * 2)], ((uint16_t)timeoutSeconds)); // Bytes 12 - 35
 }
 
-uint16_t State_ReadSensorTimeoutSeconds(uint8_t sensorIndex)
+uint16_t State_ReadSensorRailwayStopTimeoutSeconds(uint8_t sensorIndex)
 {
     return eeprom_read_word((uint16_t*)&eepromBuffer[12 + (sensorIndex * 2)]);
 }
 
 
-void State_SaveSensorDirection(uint8_t sensorIndex, uint8_t direction)
+void State_SaveSensorRailwayDirection(uint8_t sensorIndex, uint8_t direction)
 {
     eeprom_write_byte((uint8_t*)&eepromBuffer[36 + sensorIndex], ((uint8_t)direction)); // Bytes 36 - 47
 }
 
-uint8_t State_ReadSensorDirection(uint8_t sensorIndex)
+uint8_t State_ReadSensorRailwayDirection(uint8_t sensorIndex)
 {
     return eeprom_read_byte((uint8_t*)&eepromBuffer[36 + sensorIndex]);
 }
@@ -79,4 +80,15 @@ void State_SaveRailwaySpeed(uint8_t railwayIndex, uint8_t speed)
 uint8_t State_ReadRailwaySpeed(uint8_t railwayIndex)
 {
     return eeprom_read_byte((uint8_t*)&eepromBuffer[48 + railwayIndex]);
+}
+
+
+void State_SaveRailwayActivationTimeoutSeconds(uint8_t railwayIndex, uint16_t timeoutSeconds)
+{
+    eeprom_write_word((uint16_t*)&eepromBuffer[56 + (railwayIndex * 2)], ((uint16_t)timeoutSeconds)); // Bytes 56 - 67
+}
+
+uint16_t State_ReadRailwayActivationTimeoutSeconds(uint8_t railwayIndex)
+{
+    return eeprom_read_word((uint16_t*)&eepromBuffer[56 + (railwayIndex * 2)]);
 }

@@ -22,13 +22,14 @@ struct Automation_SensorConfigStruct
 {
     bool isTriggered;
     uint8_t railwayIndex;
-    uint16_t timeoutSeconds;
+    uint16_t railwayStopTimeoutSeconds;
     enum Motors_Direction direction;
 };
 
 struct Automation_RailwayConfigStruct
 {
-    uint16_t timeoutSeconds;
+    uint16_t stopTimeoutSeconds;
+    uint16_t activationTimeoutSeconds;
     float speedCurrent;
     float speed;
     enum Motors_Direction direction;

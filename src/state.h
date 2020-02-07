@@ -21,14 +21,16 @@ void State_Init(void);
 void State_Reset(void);
 
 void State_SaveSensorRailwayIndex(uint8_t sensorIndex, uint8_t railwayIndex);
-void State_SaveSensorTimeoutSeconds(uint8_t sensorIndex, uint16_t timeoutSeconds);
-void State_SaveSensorDirection(uint8_t sensorIndex, uint8_t direction);
+void State_SaveSensorRailwayStopTimeoutSeconds(uint8_t sensorIndex, uint16_t timeoutSeconds);
+void State_SaveSensorRailwayDirection(uint8_t sensorIndex, uint8_t direction);
 void State_SaveRailwaySpeed(uint8_t railwayIndex, uint8_t direction);
+void State_SaveRailwayActivationTimeoutSeconds(uint8_t railwayIndex, uint16_t timeoutSeconds);
 
 uint8_t State_ReadSensorRailwayIndex(uint8_t sensorIndex);
-uint16_t State_ReadSensorTimeoutSeconds(uint8_t sensorIndex);
-uint8_t State_ReadSensorDirection(uint8_t sensorIndex);
+uint16_t State_ReadSensorRailwayStopTimeoutSeconds(uint8_t sensorIndex);
+uint8_t State_ReadSensorRailwayDirection(uint8_t sensorIndex);
 uint8_t State_ReadRailwaySpeed(uint8_t railwayIndex);
+uint16_t State_ReadRailwayActivationTimeoutSeconds(uint8_t railwayIndex);
 
 extern uint8_t eepromBuffer[EEPROM_SIZE] EEMEM;
 
