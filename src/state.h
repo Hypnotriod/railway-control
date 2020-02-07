@@ -14,9 +14,6 @@
 #define EEPROM_SIZE 512
 #define EEPROM_KEY  0x9F5A4306
 
-#define State_SaveEEPROMKey()           (eeprom_write_dword((uint32_t*)&eepromBuffer[508], EEPROM_KEY))
-#define State_ReadEEPROMKey(_value_)    (eeprom_read_dword((uint32_t*)&eepromBuffer[508]))
-
 void State_Init(void);
 void State_Reset(void);
 
@@ -31,7 +28,5 @@ uint16_t State_ReadSensorRailwayStopTimeoutSeconds(uint8_t sensorIndex);
 uint8_t State_ReadSensorRailwayDirection(uint8_t sensorIndex);
 uint8_t State_ReadRailwaySpeed(uint8_t railwayIndex);
 uint16_t State_ReadRailwayActivationTimeoutSeconds(uint8_t railwayIndex);
-
-extern uint8_t eepromBuffer[EEPROM_SIZE] EEMEM;
 
 #endif /* STATE_H_ */
