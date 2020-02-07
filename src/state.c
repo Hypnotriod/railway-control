@@ -9,8 +9,8 @@
 #include "state.h"
 #include "automation.h"
 
-#define State_SaveEEPROMKey()           (eeprom_write_dword((uint32_t*)&eepromBuffer[508], EEPROM_KEY))
-#define State_ReadEEPROMKey(_value_)    (eeprom_read_dword((uint32_t*)&eepromBuffer[508]))
+#define State_SaveEEPROMKey() (eeprom_write_dword((uint32_t*)&eepromBuffer[508], EEPROM_KEY))
+#define State_ReadEEPROMKey() (eeprom_read_dword((uint32_t*)&eepromBuffer[508]))
 
 uint8_t eepromBuffer[EEPROM_SIZE] EEMEM;
 
