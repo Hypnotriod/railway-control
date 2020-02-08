@@ -10,5 +10,5 @@ Made for automatic controlling of 6 railways of `miniature railway installation`
 
 ## Fuses
 
-High: `EESAVE`, `BOOTSZ1`, `BOOTSZ0`\
+High: `SPIEN`, `EESAVE`, `BOOTSZ1`, `BOOTSZ0`\
 Low: `SUT1`, `CKSEL0`
