@@ -141,7 +141,10 @@
     <Compile Include="src\cmd_parser.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\strings.c">
+    <Compile Include="src\logger.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\logger.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\strings.h">

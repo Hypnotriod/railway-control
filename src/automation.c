@@ -5,14 +5,12 @@
 *  Author: Ilya Pikin
 */
 
-#include <stdio.h>
 #include "automation.h"
 #include "motors.h"
 #include "sensors.h"
 #include "timer.h"
 #include "state.h"
-#include "uart.h"
-#include "strings.h"
+#include "logger.h"
 
 struct Automation_RailwayConfigStruct raiwals[AUTOMATION_RAILWAYS_NUM];
 struct Automation_SensorConfigStruct sensors[AUTOMATION_SENSORS_NUM];
@@ -107,17 +105,18 @@ void updateSensorsState(void)
                     raiwals[railwayIndex].speed = 0.0f;
                     raiwals[railwayIndex].stopTimeoutSeconds = sensors[i].railwayStopTimeoutSeconds;
                     raiwals[railwayIndex].direction = sensors[i].direction;
+                    
+                    Logger_LogSensorTriggered(i);
+                    Logger_LogRailwayStopped(railwayIndex, sensors[i].railwayStopTimeoutSeconds);
+                } else {
+                    Logger_LogSensorTriggered(i);
                 }
-                
-                sprintf(StrBuff, STR_SENSOR_STATE_CHANGED_TO_HIGH, i);
-                UART0_WriteString(StrBuff);
             }
         }
         else if (sensors[i].isTriggered)
         {
             sensors[i].isTriggered = false;
-            sprintf(StrBuff, STR_SENSOR_STATE_CHANGED_TO_LOW, i);
-            UART0_WriteString(StrBuff);
+            Logger_LogSensorReleased(i);
         }
     }
 }
@@ -162,6 +161,7 @@ void updateOnSecondPassed(void)
                 raiwals[i].speedCurrent = AUTOMATION_MOTOR_START_SPEED;
                 raiwals[i].activationTimeoutSeconds = State_ReadRailwayActivationTimeoutSeconds(i);
                 Motors_SetDirection(i, raiwals[i].direction);
+                Logger_LogRailwayStarted(i);
             }
         }
     }

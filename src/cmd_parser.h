@@ -8,9 +8,9 @@
 #ifndef CMD_PARSER_H_
 #define CMD_PARSER_H_
 
-#define CMD_SRWI    "SRWI"      // Sensor Railway Index
-#define CMD_SRWT    "SRWT"      // Sensor Railway Stop Timeout (seconds)
-#define CMD_SRWD    "SRWD"      // Sensor Railway Direction (0 - forward, 1 - backward)
+#define CMD_SRWI    "SRWI"      // Sensor's Railway Index
+#define CMD_SRWT    "SRWT"      // Sensor's Railway Stop Timeout (seconds)
+#define CMD_SRWD    "SRWD"      // Sensor's Railway Direction (0 - forward, 1 - backward)
 #define CMD_RWSP    "RWSP"      // Railway Speed
 #define CMD_RWAT    "RWAT"      // Railway Activation Timeout (seconds)
 #define CMD_STATUS  "STATUS"    // Status

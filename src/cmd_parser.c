@@ -11,7 +11,7 @@
 #include "utils.h"
 #include "automation.h"
 #include "state.h"
-#include "strings.h"
+#include "logger.h"
 
 char   cmdBuffer[CMD_PARSER_BUFFER_LENGTH] = {0};
 int8_t cmdBufferIndex = -1;
@@ -23,7 +23,6 @@ int8_t cmdBufferIndex = -1;
 
 void CmdParser_ExecuteCommand(void);
 void CmdParser_ExecuteSetParam(void);
-void CmdParser_SendParam(const char* cmd, uint8_t index, uint16_t value);
 
 void CmdParser_Update(void)
 {
@@ -94,22 +93,22 @@ void CmdParser_ExecuteCommand(void)
     {
         for (i = 0; i < AUTOMATION_RAILWAYS_NUM; i++)
         {
-            CmdParser_SendParam(CMD_RWSP, i, State_ReadRailwaySpeed(i));
-            CmdParser_SendParam(CMD_RWAT, i, State_ReadRailwayActivationTimeoutSeconds(i));
+            Logger_SendParam(CMD_RWSP, i, State_ReadRailwaySpeed(i));
+            Logger_SendParam(CMD_RWAT, i, State_ReadRailwayActivationTimeoutSeconds(i));
         }
         
         for (i = 0; i < AUTOMATION_SENSORS_NUM; i++)
         {
-            CmdParser_SendParam(CMD_SRWI, i, State_ReadSensorRailwayIndex(i));
-            CmdParser_SendParam(CMD_SRWT, i, State_ReadSensorRailwayStopTimeoutSeconds(i));
-            CmdParser_SendParam(CMD_SRWD, i, State_ReadSensorRailwayDirection(i));
+            Logger_SendParam(CMD_SRWI, i, State_ReadSensorRailwayIndex(i));
+            Logger_SendParam(CMD_SRWT, i, State_ReadSensorRailwayStopTimeoutSeconds(i));
+            Logger_SendParam(CMD_SRWD, i, State_ReadSensorRailwayDirection(i));
         }
     }
     else if (Utils_CompareStrings(cmdBuffer, CMD_FRESET, CMD_PARSER_CMD_FULL_LENGTH))
     {
         State_Reset();
         Automation_Apply();
-        UART0_WriteString(STR_FULL_RESET_COMPLETE);
+        Logger_LogFullResetComplete();
     }
 }
 
@@ -129,14 +128,14 @@ void CmdParser_ExecuteSetParam(void)
         index %= AUTOMATION_SENSORS_NUM;
         value %= AUTOMATION_RAILWAYS_NUM;
         State_SaveSensorRailwayIndex(index, value);
-        CmdParser_SendParam(CMD_SRWI, index, value);
+        Logger_SendParam(CMD_SRWI, index, value);
         Automation_Apply();
     }
     else if (Utils_CompareStrings(cmdBuffer, CMD_SRWT, CMD_PARSER_CMD_EXEC_LENGTH))
     {
         index %= AUTOMATION_SENSORS_NUM;
         State_SaveSensorRailwayStopTimeoutSeconds(index, value);
-        CmdParser_SendParam(CMD_SRWT, index, value);
+        Logger_SendParam(CMD_SRWT, index, value);
         Automation_Apply();
     }
     else if (Utils_CompareStrings(cmdBuffer, CMD_SRWD, CMD_PARSER_CMD_EXEC_LENGTH))
@@ -144,7 +143,7 @@ void CmdParser_ExecuteSetParam(void)
         index %= AUTOMATION_SENSORS_NUM;
         if (value > (MOTORS_DIRECTION_BACKWARD + 1)) value = MOTORS_DIRECTION_BACKWARD;
         State_SaveSensorRailwayDirection(index, value);
-        CmdParser_SendParam(CMD_SRWD, index, value);
+        Logger_SendParam(CMD_SRWD, index, value);
         Automation_Apply();
     }
     else if (Utils_CompareStrings(cmdBuffer, CMD_RWSP, CMD_PARSER_CMD_EXEC_LENGTH))
@@ -152,19 +151,13 @@ void CmdParser_ExecuteSetParam(void)
         index %= AUTOMATION_RAILWAYS_NUM;
         if (value > 100) value = 100;
         State_SaveRailwaySpeed(index, value);
-        CmdParser_SendParam(CMD_RWSP, index, value);
+        Logger_SendParam(CMD_RWSP, index, value);
         Automation_Apply();
     }
     else if (Utils_CompareStrings(cmdBuffer, CMD_RWAT, CMD_PARSER_CMD_EXEC_LENGTH))
     {
         index %= AUTOMATION_RAILWAYS_NUM;
         State_SaveRailwayActivationTimeoutSeconds(index, value);
-        CmdParser_SendParam(CMD_RWAT, index, value);
+        Logger_SendParam(CMD_RWAT, index, value);
     }
-}
-
-void CmdParser_SendParam(const char* cmd, uint8_t index, uint16_t value)
-{
-    sprintf(StrBuff, STR_COMMAND_PATTERN, cmd, index, value);
-    UART0_WriteString(StrBuff);
 }
