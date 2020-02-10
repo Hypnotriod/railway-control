@@ -148,6 +148,7 @@ void updateMotorsState(void)
 void updateOnSecondPassed(void)
 {
     uint8_t i;
+    uint8_t railwaySpeedPercents;
     
     for (i = 0; i < AUTOMATION_RAILWAYS_NUM; i++)
     {
@@ -157,11 +158,12 @@ void updateOnSecondPassed(void)
         if (raiwals[i].stopTimeoutSeconds > 0) {
             raiwals[i].stopTimeoutSeconds--;
             if (raiwals[i].stopTimeoutSeconds == 0) {
-                raiwals[i].speed = (float)State_ReadRailwaySpeed(i) / 100.f;
+                railwaySpeedPercents = State_ReadRailwaySpeed(i);
+                raiwals[i].speed = (float)railwaySpeedPercents / 100.f;
                 raiwals[i].speedCurrent = AUTOMATION_MOTOR_START_SPEED;
                 raiwals[i].activationTimeoutSeconds = State_ReadRailwayActivationTimeoutSeconds(i);
                 Motors_SetDirection(i, raiwals[i].direction);
-                Logger_LogRailwayStarted(i);
+                Logger_LogRailwayStarted(i, raiwals[i].direction, railwaySpeedPercents);
             }
         }
     }
