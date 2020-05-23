@@ -1,6 +1,7 @@
 # ATMega128 Railway Control
 
-Made for automatic controlling of 6 railways of `miniature railway installation`.
+Made for automatic controlling of 6 railways of `miniature railway installation`.  
+Created in `Atmel Studio 6.2`
 
 ## Based on
 
