@@ -45,7 +45,6 @@ void Automation_Reset(void)
     
     for (i = 0; i < AUTOMATION_SENSORS_NUM; i++)
     {
-        sensors[i].isTriggered = false;
         sensors[i].direction = State_ReadSensorRailwayDirection(i);
         sensors[i].railwayIndex = State_ReadSensorRailwayIndex(i);
         sensors[i].railwayStopTimeoutSeconds = State_ReadSensorRailwayStopTimeoutSeconds(i);
@@ -92,31 +91,18 @@ void updateSensorsState(void)
     {
         railwayIndex = sensors[i].railwayIndex;
         
-        if (Sensors_Read(i))
+        if (Sensors_IsTriggered(i))
         {
-            if (sensors[i].isTriggered == false)
+            if (sensors[i].railwayStopTimeoutSeconds != 0 &&
+                raiwals[railwayIndex].stopTimeoutSeconds == 0 &&
+                raiwals[railwayIndex].activationTimeoutSeconds == 0)
             {
-                sensors[i].isTriggered = true;
+                raiwals[railwayIndex].speed = 0.0f;
+                raiwals[railwayIndex].stopTimeoutSeconds = sensors[i].railwayStopTimeoutSeconds;
+                raiwals[railwayIndex].direction = sensors[i].direction;
                 
-                if (sensors[i].railwayStopTimeoutSeconds != 0 &&
-                    raiwals[railwayIndex].stopTimeoutSeconds == 0 &&
-                    raiwals[railwayIndex].activationTimeoutSeconds == 0)
-                {
-                    raiwals[railwayIndex].speed = 0.0f;
-                    raiwals[railwayIndex].stopTimeoutSeconds = sensors[i].railwayStopTimeoutSeconds;
-                    raiwals[railwayIndex].direction = sensors[i].direction;
-                    
-                    Logger_LogSensorTriggered(i);
-                    Logger_LogRailwayStopped(railwayIndex, sensors[i].railwayStopTimeoutSeconds);
-                } else {
-                    Logger_LogSensorTriggered(i);
-                }
+                Logger_LogRailwayStopped(railwayIndex, sensors[i].railwayStopTimeoutSeconds);
             }
-        }
-        else if (sensors[i].isTriggered)
-        {
-            sensors[i].isTriggered = false;
-            Logger_LogSensorReleased(i);
         }
     }
 }

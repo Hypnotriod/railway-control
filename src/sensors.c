@@ -8,6 +8,10 @@
 #include <avr/io.h>
 #include <stdbool.h>
 #include "sensors.h"
+#include "logger.h"
+
+bool sensorsState[SENSORS_NUM] = {false};
+bool sensorsTriggeredState[SENSORS_NUM] = {false};
 
 void Sensors_Init(void)
 {
@@ -43,4 +47,33 @@ bool Sensors_Read(uint8_t index)
         case 11: return (SENSORS_SIG12_PIN & (1 << SENSORS_SIG12_INDEX));
         default: return false;
     }
+}
+
+void Sensors_Update(void)
+{
+    int i;
+    bool sensorState;
+    
+    for (i = 0; i < SENSORS_NUM; i++)
+    {
+        sensorState = Sensors_Read(i);
+        if (sensorState == true && sensorsState[i] == false) {
+            sensorsTriggeredState[i] = true;
+            sensorsState[i] = true;
+            Logger_LogSensorTriggered(i);
+        }
+        else if (sensorState == false && sensorsState[i] == true) {
+            sensorsTriggeredState[i] = false;
+            sensorsState[i] = false;
+            Logger_LogSensorReleased(i);
+        }
+        else if (sensorsTriggeredState[i] == true) {
+            sensorsTriggeredState[i] = false;
+        }
+    }
+}
+
+bool Sensors_IsTriggered(uint8_t index)
+{
+    return sensorsTriggeredState[index];
 }

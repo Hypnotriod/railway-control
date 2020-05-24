@@ -20,7 +20,6 @@
 
 struct Automation_SensorConfigStruct
 {
-    bool isTriggered;
     uint8_t railwayIndex;
     uint16_t railwayStopTimeoutSeconds;
     enum Motors_Direction direction;

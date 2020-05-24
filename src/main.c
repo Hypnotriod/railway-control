@@ -19,7 +19,7 @@
 #include "cmd_parser.h"
 #include "state.h"
 
-#define UART0_BAUD_RATE 9600
+#define UART0_BAUD_RATE 115200
 
 int main(void)
 {

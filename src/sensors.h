@@ -49,6 +49,8 @@
 #define SENSORS_NUM          12
 
 void Sensors_Init(void);
+void Sensors_Update(void);
+bool Sensors_IsTriggered(uint8_t index);
 bool Sensors_Read(uint8_t index);
 
 #endif /* SENSORS_H_ */
