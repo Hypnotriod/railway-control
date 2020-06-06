@@ -110,6 +110,14 @@ void CmdParser_ExecuteCommand(void)
         Automation_Apply();
         Logger_LogFullResetComplete();
     }
+    else if (Utils_CompareStrings(cmdBuffer, CMD_LOGENA, CMD_PARSER_CMD_FULL_LENGTH))
+    {
+        Logger_SetShowLog(true);
+    }
+    else if (Utils_CompareStrings(cmdBuffer, CMD_LOGDIS, CMD_PARSER_CMD_FULL_LENGTH))
+    {
+        Logger_SetShowLog(false);
+    }
 }
 
 void CmdParser_ExecuteSetParam(void)

@@ -28,7 +28,6 @@ void UI_Init(void)
 
 void UI_Update(void)
 {
-    Sensors_Update();
     if (UI_IsManualControlModeOn())
     {
         if (manualControlIsOn == false) {

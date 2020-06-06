@@ -15,6 +15,8 @@
 #define CMD_RWAT    "RWAT"      // Railway Activation Timeout (seconds)
 #define CMD_STATUS  "STATUS"    // Status
 #define CMD_FRESET  "FRESET"    // Full Reset
+#define CMD_LOGENA  "LOGENA"    // Log enable
+#define CMD_LOGDIS  "LOGDIS"    // Log disable
 
 #define CMD_PARSER_BUFFER_LENGTH        16
 #define CMD_PARSER_CMD_FULL_LENGTH      6

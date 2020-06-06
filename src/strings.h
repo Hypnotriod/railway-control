@@ -9,6 +9,8 @@
 #ifndef STRINGS_H_
 #define STRINGS_H_
 
+#define STR_INITIALIZATION_COMPLETED    "Initialization completed.\r\n"
+
 #define STR_COMMAND_PATTERN             "#%s%02u=%u@\r\n"
 #define STR_FULL_RESET_COMPLETE         "Full Reset complete!\r\n"
 #define STR_SENSOR_TRIGGERED            "Sensor #%02i triggered.\r\n"
