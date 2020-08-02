@@ -13,7 +13,7 @@
 #include <stdbool.h>
 
 #define UART0_RX_BUFFER_LENGTH 32
-#define UART0_TX_BUFFER_LENGTH 256
+#define UART0_TX_BUFFER_LENGTH 64
 
 #define UART0_PORT      PORTE
 #define UART0_RX_PIN    0

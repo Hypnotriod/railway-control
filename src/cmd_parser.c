@@ -103,6 +103,7 @@ void CmdParser_ExecuteCommand(void)
             Logger_SendParam(CMD_SRWT, i, State_ReadSensorRailwayStopTimeoutSeconds(i));
             Logger_SendParam(CMD_SRWD, i, State_ReadSensorRailwayDirection(i));
         }
+        Logger_LogLoggerStatus();
     }
     else if (Utils_CompareStrings(cmdBuffer, CMD_FRESET, CMD_PARSER_CMD_FULL_LENGTH))
     {
@@ -113,10 +114,12 @@ void CmdParser_ExecuteCommand(void)
     else if (Utils_CompareStrings(cmdBuffer, CMD_LOGENA, CMD_PARSER_CMD_FULL_LENGTH))
     {
         Logger_SetShowLog(true);
+        Logger_LogLoggerStatus();
     }
     else if (Utils_CompareStrings(cmdBuffer, CMD_LOGDIS, CMD_PARSER_CMD_FULL_LENGTH))
     {
         Logger_SetShowLog(false);
+        Logger_LogLoggerStatus();
     }
 }
 

@@ -60,3 +60,11 @@ void Logger_LogFullResetComplete(void)
 {
     UART0_WriteString(STR_FULL_RESET_COMPLETE);
 }
+
+void Logger_LogLoggerStatus(void)
+{
+    if (showLog)
+        UART0_WriteString(STR_LOGGER_ENABLED);
+    else
+        UART0_WriteString(STR_LOGGER_DISABLED);
+}

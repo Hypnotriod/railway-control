@@ -18,5 +18,7 @@
 #define STR_RAILWAY_STOPPED             "Railway #%i stopped for %u seconds.\r\n"
 #define STR_RAILWAY_STARTED_FORWARD     "Railway #%i started forward with speed of %u%%.\r\n"
 #define STR_RAILWAY_STARTED_BACKWARD    "Railway #%i started backward with speed of %u%%.\r\n"
+#define STR_LOGGER_ENABLED              "Logger enabled.\r\n"
+#define STR_LOGGER_DISABLED             "Logger disabled.\r\n"
 
 #endif /* CSTRINGS_H_ */
