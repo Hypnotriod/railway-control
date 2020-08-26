@@ -12,7 +12,7 @@
 #include "motors.h"
 #include <stdbool.h>
 
-#define LOGGER_STR_BUFFER_LENGTH       64
+#define LOGGER_STR_BUFFER_LENGTH       256
 
 void Logger_LogSensorTriggered(uint8_t index);
 void Logger_LogSensorReleased(uint8_t index);

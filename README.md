@@ -12,4 +12,4 @@ Created in `Atmel Studio 6.2`
 ## Fuses
 
 High: `SPIEN`, `EESAVE`, `BOOTSZ1`, `BOOTSZ0`\
-Low: `SUT1`, `CKSEL0`
+Low: `BODEN`, `SUT1`, `CKSEL0`
