@@ -16,4 +16,4 @@ Low: `BODEN`, `SUT1`, `CKSEL0`
 
 ## YouTybe
 
-(https://www.youtube.com/watch?v=yU5tgyBncmQ)
+[![](http://img.youtube.com/vi/yU5tgyBncmQ/0.jpg)](http://www.youtube.com/watch?v=yU5tgyBncmQ "")
