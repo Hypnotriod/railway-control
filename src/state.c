@@ -82,7 +82,7 @@ void State_SaveRailwaySpeed(uint8_t railwayIndex, uint8_t speed)
 
 uint8_t State_ReadRailwaySpeed(uint8_t railwayIndex)
 {
-	switch (sensorIndex) {
+	switch (railwayIndex) {
 		case 0: return 100;
 		case 1: return 100;
 		case 2: return 100;
@@ -98,7 +98,7 @@ void State_SaveRailwayActivationTimeoutSeconds(uint8_t railwayIndex, uint16_t ti
 
 uint16_t State_ReadRailwayActivationTimeoutSeconds(uint8_t railwayIndex)
 {
-	switch (sensorIndex) {
+	switch (railwayIndex) {
 		case 0: return 15;
 		case 1: return 15;
 		case 2: return 15;
